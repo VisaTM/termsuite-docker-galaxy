@@ -19,7 +19,7 @@ Dans ce répertoire, on a :
 1 - Cloner ce projet
 
 ```bash
-git clone http://vsgit.intra.inist.fr:60000/git/VisaTM/termsuite-galaxy-docker.git
+git clone https://github.com/VisaTM/termsuite-docker-galaxy.git
 ```
 
 2 - Construire l’image Docker
