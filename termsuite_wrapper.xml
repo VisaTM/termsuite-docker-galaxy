@@ -1,0 +1,50 @@
+<tool id="termsuite" name="Extract terminology" version="0.1.0">
+  <requirements>
+    <container type="docker">visatm/termsuite-wrapper</container>
+  </requirements>
+  <description>from a corpus of text files</description>
+  <command><![CDATA[
+    TermSuiteWrapper.sh -d /tmp/ts -f '$file_list' -l '$language' -o '$output' 
+    #if $memory
+      -x ${memory}m
+    #end if
+  ]]></command>
+  <configfiles>
+    <configfile name="file_list">
+      #for $i in $inputs
+          ${i.file_name}
+      #end for
+    </configfile>
+  </configfiles>
+  <inputs>
+    <param format="txt" name="inputs" type="data" multiple="true" label="Input text files" />
+    <param name="language" type="select" display="radio" label="Language of the input corpus">
+      <option value="en" selected="true">English</option>
+      <option value="fr">French</option>
+    </param>
+    <param name="memory" type="integer" optional="true" label="Maximum memory allocation in MB (optional)" />
+  </inputs>
+  <outputs>
+    <data format="json" name="output" />
+  </outputs>
+
+  <tests>
+    <test>
+      <!-- param name="input" value="countWC_input.txt"/>
+      <output name="output" file="countWC_output.txt"/ -->
+    </test>
+  </tests>
+
+  <help><![CDATA[
+This tool extracts a list of terms from a corpus of text files using the TermSuite_ software 
+and produces a putative terminology. 
+
+.. class:: warningmark
+
+If you get an “*OutOfMemoryError*” message, you may increase the maximum size of memory allocated to the Java Virtual Machine. 
+The value expressed in megabytes must be a positive non-null integer. 
+
+.. _TermSuite: http://termsuite.github.io/ 
+  ]]></help>
+
+</tool>
