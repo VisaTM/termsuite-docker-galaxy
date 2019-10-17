@@ -9,9 +9,23 @@ ARG TT_URL=http://www.cis.uni-muenchen.de/~schmid/tools/TreeTagger/data
 # Install applications and set rights
 
 COPY TermSuiteWrapper.sh /usr/bin/TermSuiteWrapper.sh
+COPY TermSuiteWrapper2.sh /usr/bin/TermSuiteWrapper2.sh
+COPY TermSuiteJson2Tsv.pl /usr/bin/TermSuiteJson2Tsv.pl
+COPY TermSuiteTsv2DocTerm.pl /usr/bin/TermSuiteTsv2DocTerm.pl
 RUN chmod 0755 /usr/bin/TermSuiteWrapper.sh
+RUN chmod 0755 /usr/bin/TermSuiteWrapper2.sh
+RUN chmod 0755 /usr/bin/TermSuiteJson2Tsv.pl
+RUN chmod 0755 /usr/bin/TermSuiteTsv2DocTerm.pl
 
 ## Install necessary tools and clean up
+
+RUN apt-get update \
+    && apt-get install -y cpanminus --no-install-recommends \
+    && cpanm -q open \
+    && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+    && apt-get clean \
+    && rm -fr /var/cache/apt/* /var/lib/apt/lists/* \
+    && rm -fr ./cpanm /root/.cpanm /usr/src/* /tmp/*
 
 WORKDIR /opt/treetagger/
 RUN wget ${TT_URL}/tree-tagger-linux-${TT_VERSION}.tar.gz \

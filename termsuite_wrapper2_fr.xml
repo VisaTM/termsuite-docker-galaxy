@@ -1,0 +1,47 @@
+<tool id="termsuite2" name="Extraction terminologique" version="0.1.0">
+  <requirements>
+    <container type="docker">visatm/termsuite-wrapper</container>
+  </requirements>
+  <description>
+    depuis un fichier de métadonnées avec titres et résumés
+  </description>
+  <command><![CDATA[
+    TermSuiteWrapper2.sh -d /tmp/ts -m '$input' -l '$language' -o '$output'
+    #if $memory
+      -x ${memory}m
+    #end if
+  ]]></command>
+  <inputs>
+    <param format="txt" name="input" type="data" multiple="true" label="Fichier de métadonnées" />
+    <param name="language" type="select" display="radio" label="Langage du corpus de texte">
+      <option value="en" selected="true">Anglais</option>
+      <option value="fr">Français</option>
+    </param>
+    <param name="memory" type="integer" optional="true" label="Allocation mémoire maximum en Mo (optionnel)" />
+  </inputs>
+  <outputs>
+    <data format="tabular" name="output" />
+  </outputs>
+
+  <tests>
+    <test>
+      <!-- param name="input" value="countWC_input.txt"/>
+      <output name="output" file="countWC_output.txt"/ -->
+    </test>
+  </tests>
+
+  <help><![CDATA[
+Cet outil extrait une liste de termes d’un ensemble de titres et de résumés provenant
+d’un corpus de documents et présents dans un fichier de métadonnées en utilisant le
+logiciel  TermSuite_ et produit une terminologie potentielle.
+
+.. class:: warningmark
+
+Si vous avez un message « *OutOfMemoryError* », vous pouvez augmenter la taille maximale de la
+mémoire allouée à la machine virtuelle Java. La valeur exprimée en méga-octets doit être une
+valeur positive non nulle.
+
+.. _TermSuite: http://termsuite.github.io/
+  ]]></help>
+
+</tool>

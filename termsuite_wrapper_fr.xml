@@ -1,0 +1,112 @@
+<tool id="termsuite" name="Extraction terminologique" version="0.1.0">
+  <requirements>
+    <container type="docker">visatm/termsuite-wrapper</container>
+  </requirements>
+  <description>depuis un corpus de fichiers textes</description>
+  <command><![CDATA[
+    TermSuiteWrapper.sh -d /tmp/ts -f '$file_list' -l '$language' -o '$output'
+    #if $format == 'json':
+      -t json
+    #elif $format == 'tsv'
+      -t tsv
+    #end if
+    #if $memory
+      -x ${memory}m
+    #end if
+    #if $gathering == 'no'
+      -a --disable-gathering
+    #end if
+    #if $limit and $limit > 0
+      -a --post-filter-property=freq -a --post-filter-top-n=$limit
+    #end if
+  ]]></command>
+  <configfiles>
+    <configfile name="file_list">
+      #for $i in $inputs
+          ${i.file_name}
+      #end for
+    </configfile>
+  </configfiles>
+  <inputs>
+    <param name="inputs" format="txt" type="data" multiple="true" label="Fichiers textes d'entrée" />
+    <param name="language" type="select" display="radio" label="Langage du corpus de texte">
+      <option value="en" selected="true">Anglais</option>
+      <option value="fr">Français</option>
+    </param>
+    <param name="format" type="select" display="radio" label="Format de sortie">
+      <option value="none" selected="true">Liste des termes extraits par document (TSV)</option>
+      <option value="tsv">Liste des termes extraits par fréquence décroissante (TSV)</option>
+      <option value="json">Fichier de TermSuite en JSON</option>
+    </param>
+    <param name="memory" type="integer" optional="true" label="Allocation mémoire maximum en Mo (optionnel)" />
+  </inputs>
+    <param name="gathering" type="select" display="radio" label="Récupération des variantes">
+      <option value="yes" selected="true">Oui</option>
+      <option value="no">Non</option>
+    </param>
+    <param name="limit" type="integer" value="" min="0" label="Nombre maximum de termes" />
+  <outputs>
+    <data format="tabular" name="output">
+      <change_format>
+        <when input="format" value="json" format="json" />
+      </change_format>
+    </data>
+  </outputs>
+
+  <tests>
+    <test>
+      <!-- param name="input" value="countWC_input.txt"/>
+      <output name="output" file="countWC_output.txt"/ -->
+    </test>
+  </tests>
+
+  <help><![CDATA[
+Cet outil extrait une liste de termes d’un corpus de fichiers textes en utilisant le logiciel
+ TermSuite_ et produit une terminologie potentielle.
+
+.. class:: warningmark
+
+Si vous avez un message « *OutOfMemoryError* », vous pouvez augmenter la taille maximale de la
+mémoire allouée à la machine virtuelle Java. La valeur exprimée en méga-octets doit être une
+valeur positive non nulle.
+
+-----
+
+**Options**
+
+Le programme reçoit plusieurs arguments, soit **obligatoires**, soit *optionnels* :
+
++ **nom des fichiers textes**
+
++ **langage du corpus de texte** (anglais par défaut)
+
++ **format de sortie** (par défaut, liste de termes extraits)
+
++ *mémoire allouée à la machine virtuelle Java* exprimée en méga-octets
+
++ *récupération des varianr=tes de terme* activée par défaut
+
++ *nombre maximum de termes retenus* filtrés par fréquence décroissante (tous par défaut)
+
+-----
+
+**Formats de sortie**
+
+Il y a trois formats de sortie possibles :
+
++ liste des termes extraits (en TSV). C’est la liste des termes trouvés par document avant tout filtrage.
+
++ fichier original de TermSuite en TSV. C'est la liste des termes trouvés par fréquence décroissante dans l’ensemble du corpus
+
++ fichier original de TermSuite en JSON.
+
+.. class:: warningmark
+
+Attention, le fichier en JSON est **ÉNORME** !!!
+
+
+
+.. _TermSuite: http://termsuite.github.io/
+  ]]></help>
+
+</tool>

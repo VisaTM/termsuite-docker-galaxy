@@ -1,0 +1,38 @@
+<tool id="tsv2docterm" name="Génération d’un fichier “document × terme”" version="0.1.0">
+  <requirements>
+    <container type="docker">visatm/termsuite-wrapper</container>
+  </requirements>
+  <description>
+    à partir d’une liste de termes extraite par TermSuite
+  </description>
+  <command><![CDATA[
+    TermSuiteTsv2DocTerm.pl -i '$input' -o '$output' 
+    #if $exclude == 'yes':
+      -x 
+    #end if
+  ]]></command>
+  <inputs>
+    <param name="input" format="tabular" type="data" label="Fichier de termes (format TSV)" />
+    <param name="exclude" type="select" display="radio" label="Exclusion des chaines incluses">
+      <option value="yes" selected="true">Oui</option>
+      <option value="no">Non</option>
+    </param>
+  </inputs>
+  <outputs>
+    <data name="output" format="tabular" label="Fichier “doc × terme” de ${on_string}" />
+  </outputs>
+
+  <tests>
+    <test>
+      <!-- param name="input" value="countWC_input.txt"/>
+      <output name="output" file="countWC_output.txt"/ -->
+    </test>
+  </tests>
+
+  <help><![CDATA[
+Cet outil génère un “document × terme” à partir de la liste de termes au format TSV 
+extraite d’un corpus de textes par TermSuite. Par défaut, et pour chaque document, 
+les chaines de caractères incluses dans des termes plus grands sont supprimées. 
+  ]]></help>
+
+</tool>
