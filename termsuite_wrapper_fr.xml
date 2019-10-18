@@ -39,12 +39,12 @@
       <option value="json">Fichier de TermSuite en JSON</option>
     </param>
     <param name="memory" type="integer" optional="true" label="Allocation mémoire maximum en Mo (optionnel)" />
-  </inputs>
     <param name="gathering" type="select" display="radio" label="Récupération des variantes">
       <option value="yes" selected="true">Oui</option>
       <option value="no">Non</option>
     </param>
     <param name="limit" type="integer" value="" min="0" label="Nombre maximum de termes" />
+  </inputs>
   <outputs>
     <data format="tabular" name="output">
       <change_format>
